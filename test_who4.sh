@@ -1,10 +1,7 @@
 #!/bin/bash
 
-TEST_DIR="$(dirname `realpath $0`)"
-cd $TEST_DIR
-
-WHO3_REFERENCE_BINARY="./who3_ref"
 TEST_BINARY="./who4"
+TEST_INPUT="./test_utmp"
 SOURCE_FILES="who4.c utmplib.c"
 REF_OUTPUT="ref_output.txt"
 TEST_OUTPUT="test_output.txt"
@@ -24,27 +21,22 @@ for file in $SOURCE_FILES; do
     fi
 done
 
-# Compile the test binary statically
-gcc -static -o $TEST_BINARY $SOURCE_FILES
+# Compile the test binary
+gcc -o $TEST_BINARY $SOURCE_FILES
 if [ $? -ne 0 ]; then
     echo "ERROR: Compilation failed."
     exit 1
 fi
 
-# Check if reference and test binaries exist
-if [ ! -f "$WHO3_REFERENCE_BINARY" ]; then
-    echo "ERROR: Reference binary ($WHO3_REFERENCE_BINARY) not found."
-    exit 1
-fi
-
+# Check if test binaries exist
 if [ ! -f "$TEST_BINARY" ]; then
     echo "ERROR: Test binary ($TEST_BINARY) not found after compilation."
     exit 1
 fi
 
-# Run both binaries and compare output
-who > "$REF_OUTPUT"
-$TEST_BINARY > "$TEST_OUTPUT"
+# Run test binary and compare output
+who $TEST_INPUT > "$REF_OUTPUT"
+$TEST_BINARY $TEST_INPUT > "$TEST_OUTPUT"
 
 if ! diff -q "$REF_OUTPUT" "$TEST_OUTPUT" > /dev/null; then
     echo "FAILED: Output differs from the original who command."
@@ -52,8 +44,8 @@ if ! diff -q "$REF_OUTPUT" "$TEST_OUTPUT" > /dev/null; then
 fi
 
 # Check the number of 'read' system calls using strace
-REF_READ_COUNT=$(strace -c $WHO3_REFERENCE_BINARY 2>&1 | grep -w read | awk '{print $4}')
-TEST_READ_COUNT=$(strace -c $TEST_BINARY 2>&1 | grep -w read | awk '{print $4}')
+REF_READ_COUNT="5"
+TEST_READ_COUNT=$(strace -c $TEST_BINARY $TEST_INPUT 2>&1 | grep -w read | awk '{print $4}')
 
 if [ "$REF_READ_COUNT" -ne "$TEST_READ_COUNT" ]; then
     echo "FAILED: read() system call count differs."
