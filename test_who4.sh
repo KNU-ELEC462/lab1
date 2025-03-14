@@ -6,6 +6,9 @@ SOURCE_FILES="who4.c utmplib.c"
 REF_OUTPUT="ref_output.txt"
 TEST_OUTPUT="test_output.txt"
 
+# Set timezone
+export TZ=Asia/Seoul
+
 # Required tools check
 REQUIRED_TOOLS=("gcc" "strace")
 for tool in "${REQUIRED_TOOLS[@]}"; do
