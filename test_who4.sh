@@ -6,6 +6,16 @@ SOURCE_FILES="who4.c utmplib.c"
 REF_OUTPUT="ref_output.txt"
 TEST_OUTPUT="test_output.txt"
 
+# Required tools check
+REQUIRED_TOOLS=("gcc" "strace")
+for tool in "${REQUIRED_TOOLS[@]}"; do
+    if ! command -v $tool &> /dev/null; then
+        echo "ERROR: '$tool' is not installed. Please install it before running the script."
+	echo "HINT: sudo apt update; sudo apt install -y $tool"
+        exit 1
+    fi
+done
+
 # Cleanup function to remove temporary files
 cleanup() {
     rm -f "$REF_OUTPUT" "$TEST_OUTPUT"
