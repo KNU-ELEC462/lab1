@@ -3,7 +3,7 @@
 TEST_BINARY="./who4"
 TEST_INPUT="./test_utmp"
 SOURCE_FILES="who4.c utmplib.c"
-REF_OUTPUT="ref_output.txt"
+REF_OUTPUT="who4_ref_output.txt"
 TEST_OUTPUT="test_output.txt"
 
 # Set timezone
@@ -15,6 +15,14 @@ for tool in "${REQUIRED_TOOLS[@]}"; do
     if ! command -v $tool &> /dev/null; then
         echo "ERROR: '$tool' is not installed. Please install it before running the script."
 	echo "HINT: sudo apt update; sudo apt install -y $tool"
+        exit 1
+    fi
+done
+
+# Check if source files exist
+for file in $SOURCE_FILES; do
+    if [ ! -f "$file" ]; then
+        echo "ERROR: Source file $file not found."
         exit 1
     fi
 done
@@ -34,14 +42,6 @@ cleanup() {
 # Ensure cleanup runs on exit (normal or error)
 trap cleanup EXIT
 
-# Check if source files exist
-for file in $SOURCE_FILES; do
-    if [ ! -f "$file" ]; then
-        echo "ERROR: Source file $file not found."
-        exit 1
-    fi
-done
-
 # Compile the test binary
 gcc -o $TEST_BINARY $SOURCE_FILES
 if [ $? -ne 0 ]; then
@@ -56,7 +56,6 @@ if [ ! -f "$TEST_BINARY" ]; then
 fi
 
 # Run test binary and compare output
-who $TEST_INPUT > "$REF_OUTPUT"
 $TEST_BINARY $TEST_INPUT > "$TEST_OUTPUT"
 
 if ! diff -q "$REF_OUTPUT" "$TEST_OUTPUT" > /dev/null; then

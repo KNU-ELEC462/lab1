@@ -19,6 +19,14 @@ for tool in "${REQUIRED_TOOLS[@]}"; do
     fi
 done
 
+# Check if source files exist
+for file in $SOURCE_FILES; do
+    if [ ! -f "$file" ]; then
+        echo "ERROR: Source file $file not found."
+        exit 1
+    fi
+done
+
 # Set test utmp input as UTMP_FILE
 cp who3.c who3.c.bak
 sed -i '/^[[:space:]]*#include[[:space:]]*<utmp.h>/a\
@@ -33,14 +41,6 @@ cleanup() {
 
 # Ensure cleanup runs on exit (normal or error)
 trap cleanup EXIT
-
-# Check if source files exist
-for file in $SOURCE_FILES; do
-    if [ ! -f "$file" ]; then
-        echo "ERROR: Source file $file not found."
-        exit 1
-    fi
-done
 
 # Compile the test binary
 gcc -o $TEST_BINARY $SOURCE_FILES 
