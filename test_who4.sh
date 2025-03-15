@@ -35,7 +35,7 @@ sed -i '/^[[:space:]]*#include[[:space:]]*<utmp.h>/a\
 
 # Cleanup function to remove temporary files
 cleanup() {
-    rm -f "$REF_OUTPUT" "$TEST_OUTPUT"
+    rm -f "$TEST_OUTPUT"
     mv who4.c.bak who4.c
 }
 
