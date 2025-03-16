@@ -46,6 +46,10 @@ $TEST_BINARY "$SOURCE_FILE" "test_$DEST_FILE"
 
 if ! diff -q "$DEST_FILE" "test_$DEST_FILE" > /dev/null; then
     echo "FAILED: Basic copy test failed."
+    echo "Source file:"
+    cat $SOURCE_FILE
+    echo "Destination file:"
+    cat $DEST_FILE
     exit 1
 fi
 
@@ -55,6 +59,10 @@ $TEST_BINARY "$SOURCE_FILE" "$SOURCE_FILE" 2> "$TEST_OUTPUT"
 
 if ! diff -q "$REF_OUTPUT" "$TEST_OUTPUT" > /dev/null; then
     echo "FAILED: Self-copy error message test failed."
+    echo "Reference output:" 
+    cat $REF_OUTPUT
+    echo "Your output:"
+    cat $TEST_OUTPUT
     exit 1
 fi
 
