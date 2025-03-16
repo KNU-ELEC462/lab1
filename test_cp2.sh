@@ -46,10 +46,10 @@ $TEST_BINARY "$SOURCE_FILE" "test_$DEST_FILE"
 
 if ! diff -q "$DEST_FILE" "test_$DEST_FILE" > /dev/null; then
     echo "FAILED: Basic copy test failed."
-    echo "Source file:"
-    cat $SOURCE_FILE
-    echo "Destination file:"
+    echo "Reference output:" 
     cat $DEST_FILE
+    echo "Your output:"
+    cat test_$DEST_FILE
     exit 1
 fi
 
