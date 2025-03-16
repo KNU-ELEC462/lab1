@@ -60,6 +60,10 @@ $TEST_BINARY $TEST_INPUT > "$TEST_OUTPUT"
 
 if ! diff -q "$REF_OUTPUT" "$TEST_OUTPUT" > /dev/null; then
     echo "FAILED: Output differs from the reference."
+    echo "Reference output:" 
+    cat $REF_OUTPUT
+    echo "Your output:"
+    cat $TEST_OUTPUT
     exit 1
 fi
 
@@ -69,6 +73,10 @@ TEST_READ_COUNT=$(strace -c $TEST_BINARY $TEST_INPUT 2>&1 | grep -w read | awk '
 
 if [ "$REF_READ_COUNT" -ne "$TEST_READ_COUNT" ]; then
     echo "FAILED: read() system call count differs."
+    echo "Reference output:" 
+    echo $REF_READ_COUNT
+    echo "Your output:"
+    echo $TEST_READ_COUNT
     exit 1
 fi
 
