@@ -1,13 +1,23 @@
 #!/bin/bash
 
 TEST_BINARY="./who4"
-TEST_INPUT="./test_utmp"
 SOURCE_FILES="who4.c utmplib.c"
 REF_OUTPUT="who4_ref_output.txt"
 TEST_OUTPUT="test_output.txt"
 
 # Set timezone
 export TZ=Asia/Seoul
+
+# Detect CPU architecture and set input file accordingly
+ARCH=$(uname -m)
+if [[ "$ARCH" == "x86_64" ]]; then
+	TEST_INPUT="./test_utmp.x86"
+elif [[ "$ARCH" == "aarch64" || "$ARCH" == "arm64" ]]; then
+	TEST_INPUT="./test_utmp.arm"
+else
+	echo "ERROR: Unsupported CPU architecture: $ARCH"
+	exit 1
+fi
 
 # Required tools check
 REQUIRED_TOOLS=("gcc" "strace")
