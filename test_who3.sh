@@ -8,6 +8,19 @@ TEST_OUTPUT="test_output.txt"
 # Set timezone
 export TZ=Asia/Seoul
 
+# NOTE: Test input must be generated separately for each CPU architecture,
+# since the layout of the utmp struct can differ between architectures.
+#
+# You can generate architecture-specific utmp files using the `utmpdump` tool.
+# For example:
+#   On an x86 machine:
+#     utmpdump /var/run/utmp > test_utmp.x86
+#
+#   Then, on an ARM machine:
+#     utmpdump -r test_utmp.x86 > test_utmp.arm
+#
+# This converts the x86 binary dump into a format that matches the ARM utmp struct layout.
+
 # Detect CPU architecture and set input file accordingly
 ARCH=$(uname -m)
 if [[ "$ARCH" == "x86_64" ]]; then
