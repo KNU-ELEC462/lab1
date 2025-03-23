@@ -14,10 +14,11 @@ export TZ=Asia/Seoul
 # You can generate architecture-specific utmp files using the `utmpdump` tool.
 # For example:
 #   On an x86 machine:
-#     utmpdump /var/run/utmp > test_utmp.x86
+#     cp /var/run/utmp test_utmp.x86
+#     utmpdump test_utmp.x86 > test_utmp.tmp
 #
 #   Then, on an ARM machine:
-#     utmpdump -r test_utmp.x86 > test_utmp.arm
+#     utmpdump -r test_utmp.tmp > test_utmp.arm
 #
 # This converts the x86 binary dump into a format that matches the ARM utmp struct layout.
 
