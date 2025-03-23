@@ -41,7 +41,7 @@ done
 cp who4.c who4.c.bak
 sed -i '/^[[:space:]]*#include[[:space:]]*<utmp.h>/a\
   #undef UTMP_FILE\
-  #define UTMP_FILE "./test_utmp"' who4.c
+  #define UTMP_FILE "'${TEST_INPUT}'"' who4.c
 
 # Cleanup function to remove temporary files
 cleanup() {
